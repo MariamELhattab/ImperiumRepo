@@ -18,11 +18,12 @@ struct Student
 	int score_std;
 	char flag;
 };
+
 int j;
 
-void insertInTheBeginning_DA(struct Student **stdPtr);
-void insertAtTheEnd_DA(struct Student **stdPtr);
-void insertInTheMiddle_DA(struct Student **stdPtr, int location);
+void insertInTheBeginning_DA(struct Student *stdPtr);
+void insertAtTheEnd_DA(struct Student *stdPtr);
+void insertInTheMiddle_DA(struct Student *stdPtr, int location);
 void insert (struct Student *stdPtr,char *name_f,int ID,int year,int month,int day,int score);
 void showArray(struct Student *stdPtr);
 
@@ -30,10 +31,6 @@ void showArray(struct Student *stdPtr);
 
 int main(void) {
 
-
-	//printf("Welcome,please enter students no.: \n");
-	//fflush(stdout);
-	//scanf("%d",&N);
 	N=10000;
 	int i;
 
@@ -41,12 +38,12 @@ int main(void) {
 
 	for (i=0; i<N ; i++)
 	{
-		insertInTheBeginning_DA(&stdPtr1);
+		insertInTheBeginning_DA(stdPtr1);
 	}
 
 	clock_t t1;
 	t1 = clock();
-	insertInTheBeginning_DA(&stdPtr1);
+	insertInTheBeginning_DA(stdPtr1);
 	t1 = clock() - t1;
 	double time_taken1 = ((double)t1)/CLOCKS_PER_SEC; // in seconds
 
@@ -56,12 +53,12 @@ int main(void) {
 
 	for (i=0; i<N ; i++)
 	{
-		insertInTheBeginning_DA(&stdPtr2);
+		insertInTheBeginning_DA(stdPtr2);
 	}
 
 	clock_t t2;
 	t2 = clock();
-	insertInTheMiddle_DA(&stdPtr2,N/2);
+	insertInTheMiddle_DA(stdPtr2,N/2);
 	t2 = clock() - t2;
 	double time_taken2 = ((double)t2)/CLOCKS_PER_SEC; // in seconds
 
@@ -71,12 +68,12 @@ int main(void) {
 	stdPtr3 = (struct Student *) malloc(N*sizeof(struct Student));
 	for (i=0; i<N ; i++)
 	{
-		insertAtTheEnd_DA(&stdPtr3);
+		insertAtTheEnd_DA(stdPtr3);
 	}
 	clock_t t3;
 	t3 = clock();
 
-	insertAtTheEnd_DA(&stdPtr3);
+	insertAtTheEnd_DA(stdPtr3);
 
 	t3 = clock() - t3;
 	double time_taken3 = ((double)t3)/CLOCKS_PER_SEC; // in seconds
@@ -87,13 +84,13 @@ int main(void) {
 }
 
 
-void insertInTheBeginning_DA(struct Student **stdPtr)
+void insertInTheBeginning_DA(struct Student *stdPtr)
 {
 	int i;
 
 	for (i=0; i<N;i++)
 	{
-		if ((*stdPtr+i)->flag != 1)
+		if ((stdPtr+i)->flag != 1)
 		{
 			break;
 		}
@@ -102,23 +99,23 @@ void insertInTheBeginning_DA(struct Student **stdPtr)
 	if (i==N)
 	{
 		N++;
-		*stdPtr = realloc(*stdPtr,N*sizeof(struct Student));
+		stdPtr = realloc(stdPtr,N*sizeof(struct Student));
 	}
 
 	for (; i>0 ;i--)
 	{
-		*(*stdPtr+i)=*(*stdPtr+i-1);
+		*(stdPtr+i)=*(stdPtr+i-1);
 	}
-	insert (*stdPtr,"daly",9,9,9,9,9);
+	insert (stdPtr,"daly",9,9,9,9,9);
 }
 
-void insertAtTheEnd_DA(struct Student **stdPtr)
+void insertAtTheEnd_DA(struct Student *stdPtr)
 {
 	int i;
 
 	for (i=N-1; i>= 0 ;i--)
 	{
-		if ((*stdPtr+i)->flag != 1)
+		if ((stdPtr+i)->flag != 1)
 		{
 			break;
 		}
@@ -128,27 +125,27 @@ void insertAtTheEnd_DA(struct Student **stdPtr)
 	{
 		N++;
 		i++;
-		*stdPtr = realloc(*stdPtr,N*sizeof(struct Student));
+		stdPtr = realloc(stdPtr,N*sizeof(struct Student));
 	}
 	else
 	{
 		for (;i<N-1;i++)
 		{
-			*(*stdPtr+i)=*(*stdPtr+i+1);
+			*(stdPtr+i)=*(stdPtr+i+1);
 		}
 	}
-	insert (*stdPtr+N-1,"amr",50,50,50,50,50);
+	insert (stdPtr+N-1,"amr",50,50,50,50,50);
 }
 
-void insertInTheMiddle_DA(struct Student **stdPtr, int location)
+void insertInTheMiddle_DA(struct Student *stdPtr, int location)
 {
 	int i;
 
-	if ((*stdPtr+location-1)->flag == 1)
+	if ((stdPtr+location-1)->flag == 1)
 	{
 		for (i=0; i<N;i++)
 		{
-			if ((*stdPtr+i)->flag != 1)
+			if ((stdPtr+i)->flag != 1)
 			{
 				break;
 			}
@@ -157,25 +154,25 @@ void insertInTheMiddle_DA(struct Student **stdPtr, int location)
 		if (i==N)
 		{
 			N++;
-			*stdPtr = realloc(*stdPtr,N*sizeof(struct Student));
+			stdPtr = realloc(stdPtr,N*sizeof(struct Student));
 		}
 
 		if (i<location-1)
 		{
 			for (;i<location-1;i++)
 			{
-				*(*stdPtr+i)=*(*stdPtr+i+1);
+				*(stdPtr+i)=*(stdPtr+i+1);
 			}
 		}
 		else
 		{
 			for (; i>location-1 ;i--)
 			{
-				*(*stdPtr+i)=*(*stdPtr+i-1);
+				*(stdPtr+i)=*(stdPtr+i-1);
 			}
 		}
 	}
-	insert (*stdPtr+(location-1),"mariam",10,10,10,10,10);
+	insert (stdPtr+(location-1),"mariam",10,10,10,10,10);
 }
 
 void insert (struct Student *stdPtr,char *name_f,int ID,int year,int month,int day,int score)
@@ -187,30 +184,6 @@ void insert (struct Student *stdPtr,char *name_f,int ID,int year,int month,int d
 	stdPtr->day=day;
 	stdPtr->score_std=score;
 	stdPtr->flag=1;
-	/*
-	printf("Enter the student name: ");
-	fflush(stdin); fflush(stdout);
-	gets(stdPtr->name);
-
-	printf("Enter the student ID: ");
-	fflush(stdout);
-	scanf("%d",&(stdPtr->std_ID));
-
-	printf("Enter the student birth date\nyear: ");
-	fflush(stdout);
-	scanf("%d",&stdPtr->year);
-	printf("month: ");
-	fflush(stdout);
-	scanf("%d",&stdPtr->month);
-	printf("day: ");
-	fflush(stdout);
-	scanf("%d",&stdPtr->day);
-
-	printf("Enter the student score: ");
-	fflush(stdout);
-	scanf("%d",&stdPtr->score_std);
-
-	stdPtr->flag=1;*/
 }
 
 void showArray(struct Student *stdPtr)
