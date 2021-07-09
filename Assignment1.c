@@ -25,38 +25,8 @@ int length = 0;//Variable to know the size of the list
 
 int main()
 {
-/*Driver Program To Test Linked List Part*/
-/*Driver Program To Test Linked List Part*/
-    char choice;
-                    int pos = 0;
-
-    while(1){
-    printf("\nEnter:\n1 To Insert At First\n2 To Insert At The End\n3 To Insert At The Position You Want\n4 To Print The List\n5 To Exit\nChoice: ");
-    fflush(stdin);
-    scanf("%c", &choice);
-
-        switch (choice){
-            case '1':
-                InsertFirst_LL("AMR FIRST",1,1,1,1,1);
-                break;
-            case '2':
-                InsertEnd_LL("AMR END",1,1,1,1,1);
-                break;
-            case '3':
-                printf("\nEnter The Position: ");
-                scanf("%d",&pos);
-                InsertAtPos_LL(pos,"AMR POS",1,1,1,1,1);
-                break;
-            case '4':
-                PrintList();
-                break;
-            case '5':
-                return 0;
-            default:
-                printf("\nInvalid Choice\n");
-                break;
-        }
-    }    }
+    return 0;
+}
 
 void InsertFirst_LL (char *InName, int InID, int InDay, int InMonth, int InYear, int InScore){
     struct Student *NewStudent = (struct Student *) malloc (sizeof(struct Student));
