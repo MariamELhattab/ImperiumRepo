@@ -4,7 +4,7 @@
 
 struct Student
 {
-	char name[100];
+	char *name;
 	int std_ID;
 	int day,month,year;
 	int score_std;
@@ -12,9 +12,9 @@ struct Student
     struct Student *next;
 };
 
-void InsertFirst_LL (void);
-void InsertEnd_LL (void);
-void InsertAtPos_LL (int pos);
+void InsertFirst_LL (char *InName, int InID, int InDay, int InMonth, int InYear, int InScore);
+void InsertEnd_LL (char *InName, int InID, int InDay, int InMonth, int InYear, int InScore);
+void InsertAtPos_LL (int pos,char *InName, int InID, int InDay, int InMonth, int InYear, int InScore);
 void PrintList (void);
 
 //initializing both head and tail pointers
@@ -25,30 +25,53 @@ int length = 0;//Variable to know the size of the list
 
 int main()
 {
-    return 0;
-}
+/*Driver Program To Test Linked List Part*/
+/*Driver Program To Test Linked List Part*/
+    char choice;
+                    int pos = 0;
 
-void InsertFirst_LL (void){
+    while(1){
+    printf("\nEnter:\n1 To Insert At First\n2 To Insert At The End\n3 To Insert At The Position You Want\n4 To Print The List\n5 To Exit\nChoice: ");
+    fflush(stdin);
+    scanf("%c", &choice);
+
+        switch (choice){
+            case '1':
+                InsertFirst_LL("AMR FIRST",1,1,1,1,1);
+                break;
+            case '2':
+                InsertEnd_LL("AMR END",1,1,1,1,1);
+                break;
+            case '3':
+                printf("\nEnter The Position: ");
+                scanf("%d",&pos);
+                InsertAtPos_LL(pos,"AMR POS",1,1,1,1,1);
+                break;
+            case '4':
+                PrintList();
+                break;
+            case '5':
+                return 0;
+            default:
+                printf("\nInvalid Choice\n");
+                break;
+        }
+    }    }
+
+void InsertFirst_LL (char *InName, int InID, int InDay, int InMonth, int InYear, int InScore){
     struct Student *NewStudent = (struct Student *) malloc (sizeof(struct Student));
     //Assigning the wanted data to the new Student
-    printf("Enter the name: ");
-    fflush(stdin);
-    gets(NewStudent->name);
-    printf("Enter the ID: ");
-    scanf("%d",&NewStudent->std_ID);
-    printf("Enter the day: ");
-    scanf("%d",&NewStudent->day);
-    printf("Enter the month: ");
-    scanf("%d",&NewStudent->month);
-    printf("Enter the year: ");
-    scanf("%d",&NewStudent->year);
-    printf("Enter the score: ");
-    scanf("%d",&NewStudent->score_std);
+    NewStudent->name = InName;
+    NewStudent->std_ID = InID;
+    NewStudent->day = InDay;
+    NewStudent->month = InMonth;
+    NewStudent->year = InYear;
+    NewStudent->score_std = InScore;
 
     //Changing Head Pointer
 
         if (length == 0){//If the list is empty
-            Head = NewStudent;
+            Head = Tail = NewStudent;
             NewStudent->next = NULL;
         }
 
@@ -61,35 +84,21 @@ void InsertFirst_LL (void){
 
 }
 
-void InsertEnd_LL (void){
+void InsertEnd_LL (char *InName, int InID, int InDay, int InMonth, int InYear, int InScore){
     struct Student *NewStudent = (struct Student *) malloc (sizeof(struct Student));
 
     //Assigning the wanted data to the new Student
-    printf("Enter the name: ");
-    fflush(stdin);
-    gets(NewStudent->name);
-    printf("Enter the ID: ");
-    scanf("%d",&NewStudent->std_ID);
-    printf("Enter the day: ");
-    scanf("%d",&NewStudent->day);
-    printf("Enter the month: ");
-    scanf("%d",&NewStudent->month);
-    printf("Enter the year: ");
-    scanf("%d",&NewStudent->year);
-    printf("Enter the score: ");
-    scanf("%d",&NewStudent->score_std);
+    NewStudent->name = InName;
+    NewStudent->std_ID = InID;
+    NewStudent->day = InDay;
+    NewStudent->month = InMonth;
+    NewStudent->year = InYear;
+    NewStudent->score_std = InScore;
 
     //Changing Tail and Head Pointers if needed
     if (length == 0){//To handle beginning the insertion at the end (list is empty)
         Head = Tail = NewStudent;
         NewStudent->next = NULL;
-    }
-    else if (Tail==NULL){ //To handle inserting multiple Students at first then inserting at the end
-        struct Student *current = Head;
-        while (current->next != NULL)
-            current = current->next;
-        Tail = NewStudent;
-        current->next = NewStudent;
     }
     else{
         NewStudent->next = NULL;
@@ -101,33 +110,26 @@ void InsertEnd_LL (void){
 
 }
 
-void InsertAtPos_LL (int pos){
+void InsertAtPos_LL (int pos,char *InName, int InID, int InDay, int InMonth, int InYear, int InScore){
     struct Student *NewStudent = (struct Student *) malloc (sizeof(struct Student));
 
     if (pos<0||pos>length)
             printf("Invalid Position");
     else if (pos == 0)
-            InsertFirst_LL();
+            InsertFirst_LL(InName, InID, InDay, InMonth, InYear, InScore);
 
     else if (pos==length)
-            InsertEnd_LL();
+            InsertEnd_LL(InName, InID, InDay, InMonth, InYear, InScore);
 
     else{
             struct Student *current = Head;
             //Assigning the wanted data to the new Student
-            printf("Enter the name: ");
-            fflush(stdin);
-            gets(NewStudent->name);
-            printf("Enter the ID: ");
-            scanf("%d",&NewStudent->std_ID);
-            printf("Enter the day: ");
-            scanf("%d",&NewStudent->day);
-            printf("Enter the month: ");
-            scanf("%d",&NewStudent->month);
-            printf("Enter the year: ");
-            scanf("%d",&NewStudent->year);
-            printf("Enter the score: ");
-            scanf("%d",&NewStudent->score_std);
+            NewStudent->name = InName;
+            NewStudent->std_ID = InID;
+            NewStudent->day = InDay;
+            NewStudent->month = InMonth;
+            NewStudent->year = InYear;
+            NewStudent->score_std = InScore;
             //Searching for the wanted position
             for (int i=1;i<pos;i++)
                 current = current->next;
@@ -141,11 +143,18 @@ void InsertAtPos_LL (int pos){
 }
 
 void PrintList (void) {
-    struct Student *current = Head;
-    printf("\n----------------PRINTING-------------------\n");
-    for (int i = 0;i<=length;i++){
-        printf("Student %d:\nName: %s\nID: %d\nDate of birth: %d/%d/%d\nLast year score: %d\n",i+1,current->name,current->std_ID,current->day,current->month,current->year,current->score_std);
-        printf("-------------------------------------------\n");
-        current = current->next;
+    if(length == 0){
+        printf("The List Is Empty\n");
+    }
+    else{
+
+        struct Student *current = Head;
+        printf("\n----------------PRINTING-------------------\n");
+
+        for (int i = 0;i<=length;i++){
+            printf("Student %d:\nName: %s\nID: %d\nDate of birth: %d/%d/%d\nLast year score: %d\n",i+1,current->name,current->std_ID,current->day,current->month,current->year,current->score_std);
+            printf("-------------------------------------------\n");
+            current = current->next;
+        }
     }
 }
