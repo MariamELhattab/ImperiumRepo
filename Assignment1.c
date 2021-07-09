@@ -1,182 +1,193 @@
-/******************************************************************************
- *
- * Assignment 1
- *
- * File Name: Assignment1.c
- *
- * Description: Students data storing using dynamic arrays and linked lists
- *
- * Author: Ahmed Mamdouh Ahmed Aboudief			Sec:1		BN:21
- *         Amr Maged Hassan Taha                Sec:3		BN:19
- *         Mariam Amr Youssef ElHattab			Sec:4		BN:10
- *
- *******************************************************************************/
-
 #include <stdio.h>
 #include <stdlib.h>
-#include <assert.h>
+#include <string.h>
+#include <time.h>
 
-/*******************************************************************************
- *                           Global Variables                                  *
- *******************************************************************************/
-
-/* N : number of students */
+//N : number of students
 int N;
 
-/* Variable to know the size of the Linked list */
-int length = 0;
+struct Student *stdPtr1;
+struct Student *stdPtr2;
+struct Student *stdPtr3;
 
-/* Structure to carry each student data */
 struct Student
 {
-	/* Student data */
 	char name[100];
 	int std_ID;
 	int day,month,year;
 	int score_std;
-
-	/* Flag to determine wether the location is empty or not */
 	char flag;
-
-	/* Next pointer for Linked list */
-	struct Student *next;
 };
+int j;
 
-/* Initializing both head and tail pointers */
-struct Student *Head = NULL;
-struct Student *Tail = NULL;
-
-/*******************************************************************************
- *                      Functions Declarations                                 *
- *******************************************************************************/
-
-void insertInTheBeginning_DA(struct Student *stdPtr);
-void insertAtTheEnd_DA(struct Student *stdPtr);
-void insertInTheMiddle_DA(struct Student *stdPtr, int location);
-void insert (struct Student *stdPtr);
+void insertInTheBeginning_DA(struct Student **stdPtr);
+void insertAtTheEnd_DA(struct Student **stdPtr);
+void insertInTheMiddle_DA(struct Student **stdPtr, int location);
+void insert (struct Student *stdPtr,char *name_f,int ID,int year,int month,int day,int score);
 void showArray(struct Student *stdPtr);
-void InsertFirst_LL (void);
-void InsertEnd_LL (void);
-void InsertAtPos_LL (int pos);
-void PrintList (void);
 
-/*******************************************************************************
- *                      Functions Definitions                                  *
- *******************************************************************************/
- 
-int main()
-{
-	printf("Welcome\n");
+#include <time.h>
 
-	struct Student *stdPtr;
+int main(void) {
 
-	stdPtr = (struct Student *) malloc(N*sizeof(struct Student));
+
+	//printf("Welcome,please enter students no.: \n");
+	//fflush(stdout);
+	//scanf("%d",&N);
+	N=10000;
+	int i;
+
+	stdPtr1 = (struct Student *) malloc(N*sizeof(struct Student));
+
+	for (i=0; i<N ; i++)
+	{
+		insertInTheBeginning_DA(&stdPtr1);
+	}
+
+	clock_t t1;
+	t1 = clock();
+	insertInTheBeginning_DA(&stdPtr1);
+	t1 = clock() - t1;
+	double time_taken1 = ((double)t1)/CLOCKS_PER_SEC; // in seconds
+
+	printf("fun() took %.9f seconds to execute \n", time_taken1);
+
+	stdPtr2 = (struct Student *) malloc(N*sizeof(struct Student));
+
+	for (i=0; i<N ; i++)
+	{
+		insertInTheBeginning_DA(&stdPtr2);
+	}
+
+	clock_t t2;
+	t2 = clock();
+	insertInTheMiddle_DA(&stdPtr2,N/2);
+	t2 = clock() - t2;
+	double time_taken2 = ((double)t2)/CLOCKS_PER_SEC; // in seconds
+
+	printf("fun() took %.9f seconds to execute \n", time_taken2);
+
+
+	stdPtr3 = (struct Student *) malloc(N*sizeof(struct Student));
+	for (i=0; i<N ; i++)
+	{
+		insertAtTheEnd_DA(&stdPtr3);
+	}
+	clock_t t3;
+	t3 = clock();
+
+	insertAtTheEnd_DA(&stdPtr3);
+
+	t3 = clock() - t3;
+	double time_taken3 = ((double)t3)/CLOCKS_PER_SEC; // in seconds
+
+	printf("fun() took %.9f seconds to execute \n", time_taken3);
 
 	return 0;
 }
 
 
-void insertInTheBeginning_DA(struct Student *stdPtr)
+void insertInTheBeginning_DA(struct Student **stdPtr)
 {
-	/* i : Counter for loops */
 	int i;
 
-	/* Making sure there is an empty slot in the dynamic array */
 	for (i=0; i<N;i++)
 	{
-		if ((stdPtr+i)->flag != 1)
+		if ((*stdPtr+i)->flag != 1)
 		{
 			break;
 		}
 	}
 
-	/* If there is no space for additional student the program will assert */
-	assert(i!=N);
+	if (i==N)
+	{
+		N++;
+		*stdPtr = realloc(*stdPtr,N*sizeof(struct Student));
+	}
 
-	/* Shifting from the last position to make room in the beginning for insertion */
 	for (; i>0 ;i--)
 	{
-		*(stdPtr+i)=*(stdPtr+i-1);
-		(stdPtr+i-1)->flag=0;
+		*(*stdPtr+i)=*(*stdPtr+i-1);
 	}
-
-	insert (stdPtr);
+	insert (*stdPtr,"daly",9,9,9,9,9);
 }
 
-void insertAtTheEnd_DA(struct Student *stdPtr)
+void insertAtTheEnd_DA(struct Student **stdPtr)
 {
-	/* i : Counter for loops */
 	int i;
 
-	/* Making sure there is an empty slot in the dynamic array */
 	for (i=N-1; i>= 0 ;i--)
 	{
-		if ((stdPtr+i)->flag != 1)
+		if ((*stdPtr+i)->flag != 1)
 		{
 			break;
 		}
 	}
 
-	/* If there is no space for additional student the program will assert */
-	assert(i!=-1);
-
-	/* Shifting from the first position to make room at the end for insertion */
-	for (;i<N-1;i++)
+	if(i==-1)
 	{
-		*(stdPtr+i)=*(stdPtr+i+1);
-		(stdPtr+i+1)->flag=0;
+		N++;
+		i++;
+		*stdPtr = realloc(*stdPtr,N*sizeof(struct Student));
 	}
-
-	insert (stdPtr+N-1);
+	else
+	{
+		for (;i<N-1;i++)
+		{
+			*(*stdPtr+i)=*(*stdPtr+i+1);
+		}
+	}
+	insert (*stdPtr+N-1,"amr",50,50,50,50,50);
 }
 
-void insertInTheMiddle_DA(struct Student *stdPtr, int location)
+void insertInTheMiddle_DA(struct Student **stdPtr, int location)
 {
-	/* i : Counter for loops */
 	int i;
 
-	/* If the required location is not empty we should make room for it */
-	if ((stdPtr+location-1)->flag == 1)
+	if ((*stdPtr+location-1)->flag == 1)
 	{
-		/* Making sure there is an empty slot in the dynamic array */
 		for (i=0; i<N;i++)
 		{
-			if ((stdPtr+i)->flag != 1)
+			if ((*stdPtr+i)->flag != 1)
 			{
 				break;
 			}
 		}
 
-		/* If there is no space for additional student the program will assert */
-		assert(i!=N);
+		if (i==N)
+		{
+			N++;
+			*stdPtr = realloc(*stdPtr,N*sizeof(struct Student));
+		}
 
-		/* If the empty slot is before the required location we should shift to the left */
 		if (i<location-1)
 		{
-			for (;i<N-1;i++)
+			for (;i<location-1;i++)
 			{
-				*(stdPtr+i)=*(stdPtr+i+1);
-				(stdPtr+i+1)->flag=0;
+				*(*stdPtr+i)=*(*stdPtr+i+1);
 			}
 		}
-		/* If the empty slot is after the required location we should shift to the right */
 		else
 		{
-			for (; i>0 ;i--)
+			for (; i>location-1 ;i--)
 			{
-				*(stdPtr+i)=*(stdPtr+i-1);
-				(stdPtr+i-1)->flag=0;
+				*(*stdPtr+i)=*(*stdPtr+i-1);
 			}
 		}
 	}
-
-	insert (stdPtr+(location-1));
+	insert (*stdPtr+(location-1),"mariam",10,10,10,10,10);
 }
 
-void insert (struct Student *stdPtr)
+void insert (struct Student *stdPtr,char *name_f,int ID,int year,int month,int day,int score)
 {
-	/* Assigning the wanted data to the new Student */
-
+	strcpy(stdPtr->name,name_f);
+	stdPtr->std_ID=ID;
+	stdPtr->year=year;
+	stdPtr->month=month;
+	stdPtr->day=day;
+	stdPtr->score_std=score;
+	stdPtr->flag=1;
+	/*
 	printf("Enter the student name: ");
 	fflush(stdin); fflush(stdout);
 	gets(stdPtr->name);
@@ -188,11 +199,9 @@ void insert (struct Student *stdPtr)
 	printf("Enter the student birth date\nyear: ");
 	fflush(stdout);
 	scanf("%d",&stdPtr->year);
-
 	printf("month: ");
 	fflush(stdout);
 	scanf("%d",&stdPtr->month);
-
 	printf("day: ");
 	fflush(stdout);
 	scanf("%d",&stdPtr->day);
@@ -201,13 +210,12 @@ void insert (struct Student *stdPtr)
 	fflush(stdout);
 	scanf("%d",&stdPtr->score_std);
 
-	stdPtr->flag=1;
+	stdPtr->flag=1;*/
 }
 
 void showArray(struct Student *stdPtr)
 {
-	/* i : Counter for loops */
-	int i;
+	int i=0;
 
 	for (i=0;i<N;i++)
 	{
@@ -219,170 +227,3 @@ void showArray(struct Student *stdPtr)
 	}
 }
 
-void InsertFirst_LL (void)
-{
-	struct Student *NewStudent = (struct Student *) malloc (sizeof(struct Student));
-
-	/* Assigning the wanted data to the new Student */
-
-	printf("Enter the name: ");
-	fflush(stdin);
-	gets(NewStudent->name);
-
-	printf("Enter the ID: ");
-	scanf("%d",&NewStudent->std_ID);
-
-	printf("Enter the day: ");
-	scanf("%d",&NewStudent->day);
-
-	printf("Enter the month: ");
-	scanf("%d",&NewStudent->month);
-
-	printf("Enter the year: ");
-	scanf("%d",&NewStudent->year);
-
-	printf("Enter the score: ");
-	scanf("%d",&NewStudent->score_std);
-
-	if (length == 0)
-	{
-		/* If the list is empty */
-		Head = NewStudent;
-		NewStudent->next = NULL;
-	}
-	else
-	{
-		/* If we already have a Student at first */
-		NewStudent->next = Head;
-		Head = NewStudent;
-	}
-	length ++;
-}
-
-void InsertEnd_LL (void)
-{
-	struct Student *NewStudent = (struct Student *) malloc (sizeof(struct Student));
-
-	/* Assigning the wanted data to the new Student */
-
-	printf("Enter the name: ");
-	fflush(stdin);
-	gets(NewStudent->name);
-
-	printf("Enter the ID: ");
-	scanf("%d",&NewStudent->std_ID);
-
-	printf("Enter the day: ");
-	scanf("%d",&NewStudent->day);
-
-	printf("Enter the month: ");
-	scanf("%d",&NewStudent->month);
-
-	printf("Enter the year: ");
-	scanf("%d",&NewStudent->year);
-
-	printf("Enter the score: ");
-	scanf("%d",&NewStudent->score_std);
-
-	if (length == 0)
-	{
-		/* To handle beginning the insertion at the end (list is empty) */
-		Head = Tail = NewStudent;
-		NewStudent->next = NULL;
-	}
-	else if (Tail==NULL)
-	{ 
-		/* To handle inserting multiple Students at first then inserting at the end */
-		struct Student *current = Head;
-
-		while (current->next != NULL)
-		{
-			current = current->next;
-		}
-
-		Tail = NewStudent;
-		current->next = NewStudent;
-	}
-	else
-	{
-		NewStudent->next = NULL;
-		Tail->next = NewStudent;
-		Tail=NewStudent;
-	}
-
-	length ++;
-}
-
-void InsertAtPos_LL (int pos)
-{
-	struct Student *NewStudent = (struct Student *) malloc (sizeof(struct Student));
-
-	if (pos<0||pos>length)
-	{
-		printf("Invalid Position");
-	}
-	else if (pos == 0)
-	{
-		InsertFirst_LL();
-	}
-	else if (pos==length)
-	{
-		InsertEnd_LL();
-	}
-	else
-	{
-		struct Student *current = Head;
-
-		/* Assigning the wanted data to the new Student */
-
-		printf("Enter the name: ");
-		fflush(stdin);
-		gets(NewStudent->name);
-
-		printf("Enter the ID: ");
-		scanf("%d",&NewStudent->std_ID);
-
-		printf("Enter the day: ");
-		scanf("%d",&NewStudent->day);
-
-		printf("Enter the month: ");
-		scanf("%d",&NewStudent->month);
-
-		printf("Enter the year: ");
-		scanf("%d",&NewStudent->year);
-
-		printf("Enter the score: ");
-		scanf("%d",&NewStudent->score_std);
-
-		/* Searching for the wanted position */
-		for (int i=1;i<pos;i++)
-		{
-			current = current->next;
-		}
-
-		NewStudent->next = current->next;
-		current->next = NewStudent;
-	}
-
-	length ++;
-}
-
-void PrintList (void) 
-{
-	/* i : Counter for loops */
-	int i;
-
-	struct Student *current = Head;
-
-	printf("\n----------------PRINTING-------------------\n");
-
-	for ( i=0; i<=length ; i++)
-	{
-		printf("Student %d:\nName: %s\nID: %d\nDate of birth: %d/%d/%d\nLast year score: 
-				%d\n",i+1,current->name,current->std_ID,current->day,current->month,current->year,current->score_std);
-
-				printf("-------------------------------------------\n");
-
-		current = current->next;
-	}
-}
