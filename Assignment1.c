@@ -6,9 +6,6 @@
 //N : number of students
 int N;
 
-struct Student *stdPtr;
-
-
 /* ---------------------------------Defining Structure--------------------------------- */
 struct Student
 {
@@ -16,18 +13,30 @@ struct Student
 	int std_ID;
 	int day,month,year;
 	int score_std;
-	char flag;
-	struct Student *next;
 };
 
+struct StudentDA
+{
+	struct Student stdData;
+	char flag;
+};
 
+struct StudentLL
+{
+	struct Student stdData;
+	struct StudentLL *next;
+};
+
+struct Student *stdPtr;
+struct StudentDA *stdPtrDA;
+struct StudentLL *stdPtrLL;
 
 /* -------------------------------Dynamic Array Functions-------------------------------- */
-void insertInTheBeginning_DA(struct Student *stdPtr);
-void insertAtTheEnd_DA(struct Student *stdPtr);
-void insertInTheMiddle_DA(struct Student *stdPtr, int location);
-void insert (struct Student *stdPtr,char *name_f,int ID,int year,int month,int day,int score);
-void printArray(struct Student *stdPtr);
+void insertInTheBeginning_DA(struct StudentDA *stdPtrDA);
+void insertAtTheEnd_DA(struct StudentDA *stdPtrDA);
+void insertInTheMiddle_DA(struct StudentDA *stdPtrDA, int location);
+void insert (struct StudentDA *stdPtrDA,char *name_f,int ID,int year,int month,int day,int score);
+void printArray(struct StudentDA *stdPtrDA);
 
 
 /* --------------------------------Linked List Functions-------------------------------- */
@@ -38,8 +47,8 @@ void PrintList (void);
 
 
 /* ----------------------initializing both head and tail pointers------------------------ */
-struct Student *Head = NULL;
-struct Student *Tail = NULL;
+struct StudentLL *Head = NULL;
+struct StudentLL *Tail = NULL;
 
 
 /* ---------------------------------Linked List Length----------------------------------- */
@@ -49,63 +58,68 @@ int length = 0;
 /* ----------------------------------------MAIN------------------------------------------ */
 int main(void) {
 
+	puts ("Hello, welcome on board :)\n");
+
+	printf("Size of structure: %lu\n",(long unsigned int)sizeof(struct Student));
+	printf("Size of node: %lu\n\n",(long unsigned int)sizeof(struct StudentLL));
+
 	clock_t t1DA,t1LL,t2DA,t2LL,t3DA,t3LL;
-	N=10000;
+	double time_taken1DA,time_taken2DA,time_taken3DA;
+	double time_taken1LL,time_taken2LL,time_taken3LL;
+	N=10;
 	int i;
 
-	stdPtr = (struct Student *) malloc(N*sizeof(struct Student));
+	stdPtrDA = (struct StudentDA *) malloc(N*sizeof(struct StudentDA));
 
 	for (i=0; i<N ; i++)
 	{
-		insertInTheBeginning_DA(stdPtr);
-	}
-	for (i=0; i<N ; i++)
-	{
-		InsertFirst_LL ("student1", 10, 10, 10, 10, 10);
+		insertInTheBeginning_DA(stdPtrDA);
 	}
 
 	t1DA = clock();
-	insertInTheBeginning_DA(stdPtr);
+	insertInTheBeginning_DA(stdPtrDA);
 	t1DA = clock() - t1DA;
-	double time_taken1DA = ((double)t1DA)/CLOCKS_PER_SEC; // in seconds
-	printf("Insert in the beginning in Dynamic array time taken: %*.9lf\n", 5,time_taken1DA);
-
-	t1LL = clock();
-	InsertFirst_LL ("student1", 10, 10, 10, 10, 10);
-	t1LL = clock() - t1LL;
-	double time_taken1LL = ((double)t1LL)/CLOCKS_PER_SEC; // in seconds
-
-	printf("Insert in the beginning in Linked list time taken:   %*.9lf\n\n",5, time_taken1LL);
+	time_taken1DA = ((double)t1DA)/CLOCKS_PER_SEC; // in seconds
+	printf("Insert in the beginning in Dynamic array time taken: %.9f\n",time_taken1DA);
 
 	t2DA = clock();
-	insertInTheMiddle_DA(stdPtr,N/2);
+	insertInTheMiddle_DA(stdPtrDA,N/2);
 	t2DA = clock() - t2DA;
-	double time_taken2DA = ((double)t2DA)/CLOCKS_PER_SEC; // in seconds
-
-	printf("Insert in the middle in Dynamic array time taken: %*.9lf\n", 5,time_taken2DA);
-
-	t2LL = clock();
-	InsertAtPos_LL (N/2,"student2", 50, 50, 50, 50, 50);
-	t2LL = clock() - t2LL;
-	double time_taken2LL = ((double)t2LL)/CLOCKS_PER_SEC; // in seconds
-
-	printf("Insert in the middle in Linked list time taken:   %*.9lf\n\n",5, time_taken2LL);
-
+	time_taken2DA = ((double)t2DA)/CLOCKS_PER_SEC; // in seconds
+	printf("Insert in the middle in Dynamic array time taken: %.9f\n",time_taken2DA);
 
 	t3DA = clock();
-	insertAtTheEnd_DA(stdPtr);
+	insertAtTheEnd_DA(stdPtrDA);
 	t3DA = clock() - t3DA;
-	double time_taken3DA = ((double)t3DA)/CLOCKS_PER_SEC; // in seconds
+	time_taken3DA = ((double)t3DA)/CLOCKS_PER_SEC; // in seconds
+	printf("Insert at the end in Dynamic array time taken: %.9f\n",time_taken3DA);
 
-	printf("Insert at the end in Dynamic array time taken: %*.9lf\n", 5,time_taken3DA);
+	free(stdPtrDA);
+
+	stdPtrLL = (struct StudentLL *) malloc(N*sizeof(struct StudentLL));
+
+	for (i=0; i<N ; i++)
+	{
+		InsertFirst_LL ("student1", 1, 1, 1, 1, 1);
+	}
+
+	t1LL = clock();
+	InsertFirst_LL ("student1", 1, 1, 1, 1, 1);
+	t1LL = clock() - t1LL;
+	time_taken1LL = ((double)t1LL)/CLOCKS_PER_SEC; // in seconds
+	printf("\nInsert in the beginning in Linked list time taken: %.9f\n", time_taken1LL);
+
+	t2LL = clock();
+	InsertAtPos_LL (N/2,"student2", 2, 2, 2, 2, 2);
+	t2LL = clock() - t2LL;
+	time_taken2LL = ((double)t2LL)/CLOCKS_PER_SEC; // in seconds
+	printf("Insert in the middle in Linked list time taken: %.9f\n", time_taken2LL);
 
 	t3LL = clock();
-	InsertEnd_LL ("student3", 9, 9, 9, 9, 9);
+	InsertEnd_LL ("student3", 3, 3, 3, 3, 3);
 	t3LL = clock() - t3LL;
-	double time_taken3LL = ((double)t3LL)/CLOCKS_PER_SEC; // in seconds
-
-	printf("Insert at the end in Linked list time taken:   %*.9lf\n\n", 5,time_taken3LL);
-
+	time_taken3LL = ((double)t3LL)/CLOCKS_PER_SEC; // in seconds
+	printf("Insert at the end in Linked list time taken: %.9f\n",time_taken3LL);
 
 	return 0;
 }
@@ -118,68 +132,76 @@ int main(void) {
 /* ----------------------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------------------- */
 
-void insertInTheBeginning_DA(struct Student *stdPtr)
+void insertInTheBeginning_DA(struct StudentDA *stdPtrDA)
 {
 	int i;
-
-	for (i=0; i<N;i++)
-	{
-		if ((stdPtr+i)->flag != 1)
-		{
-			break;
-		}
-	}
-
-	if (i==N)
-	{
-		N++;
-		stdPtr = realloc(stdPtr,N*sizeof(struct Student));
-	}
-
-	for (; i>0 ;i--)
-	{
-		*(stdPtr+i)=*(stdPtr+i-1);
-	}
-	insert (stdPtr,"student1",9,9,9,9,9);
-}
-
-void insertAtTheEnd_DA(struct Student *stdPtr)
-{
-	int i;
-
-	for (i=N-1; i>= 0 ;i--)
-	{
-		if ((stdPtr+i)->flag != 1)
-		{
-			break;
-		}
-	}
-
-	if(i==-1)
-	{
-		N++;
-		i++;
-		stdPtr = realloc(stdPtr,N*sizeof(struct Student));
-	}
-	else
-	{
-		for (;i<N-1;i++)
-		{
-			*(stdPtr+i)=*(stdPtr+i+1);
-		}
-	}
-	insert (stdPtr+N-1,"student3",50,50,50,50,50);
-}
-
-void insertInTheMiddle_DA(struct Student *stdPtr, int location)
-{
-	int i;
-
-	if ((stdPtr+location-1)->flag == 1)
+	if ((stdPtrDA)->flag == 1)
 	{
 		for (i=0; i<N;i++)
 		{
-			if ((stdPtr+i)->flag != 1)
+			if ((stdPtrDA+i)->flag != 1)
+			{
+				break;
+			}
+		}
+		if (i==N)
+		{
+			N++;
+			stdPtrDA = (struct StudentDA *) realloc(stdPtrDA,N*sizeof(struct StudentDA));
+		}
+
+		for (; i>0 ;i--)
+		{
+			*(stdPtrDA+i)=*(stdPtrDA+i-1);
+		}
+	}
+	insert (stdPtrDA,"student1",1,1,1,1,1);
+}
+
+void insertAtTheEnd_DA(struct StudentDA *stdPtrDA)
+{
+	int i;
+	if ((stdPtrDA+N-1)->flag == 1)
+	{
+		for (i=N-1; i>= 0 ;i--)
+		{
+			if ((stdPtrDA+i)->flag != 1)
+			{
+				break;
+			}
+		}
+
+		if(i==-1)
+		{
+			N++;
+			i++;
+			stdPtrDA = (struct StudentDA *)realloc(stdPtrDA,N*sizeof(struct StudentDA));
+		}
+		else
+		{
+			for (;i<N-1;i++)
+			{
+				*(stdPtrDA+i)=*(stdPtrDA+i+1);
+			}
+		}
+	}
+	insert (stdPtrDA+N-1,"student3",4,4,4,4,4);
+}
+
+void insertInTheMiddle_DA(struct StudentDA *stdPtrDA, int location)
+{
+	int i;
+
+	if (location<1||location>N)
+	{
+		printf("Invalid Position\n");
+		return;
+	}
+	if ((stdPtrDA+location-1)->flag == 1)
+	{
+		for (i=0; i<N;i++)
+		{
+			if ((stdPtrDA+i)->flag != 1)
 			{
 				break;
 			}
@@ -188,50 +210,54 @@ void insertInTheMiddle_DA(struct Student *stdPtr, int location)
 		if (i==N)
 		{
 			N++;
-			stdPtr = realloc(stdPtr,N*sizeof(struct Student));
+			stdPtrDA = (struct StudentDA *)realloc(stdPtrDA,N*sizeof(struct StudentDA));
 		}
 
 		if (i<location-1)
 		{
 			for (;i<location-1;i++)
 			{
-				*(stdPtr+i)=*(stdPtr+i+1);
+				*(stdPtrDA+i)=*(stdPtrDA+i+1);
 			}
 		}
 		else
 		{
 			for (; i>location-1 ;i--)
 			{
-				*(stdPtr+i)=*(stdPtr+i-1);
+				*(stdPtrDA+i)=*(stdPtrDA+i-1);
 			}
 		}
 	}
-	insert (stdPtr+(location-1),"student2",10,10,10,10,10);
+	insert (stdPtrDA+(location-1),"student2",2,2,2,2,2);
 }
 
-void insert (struct Student *stdPtr,char *name_f,int ID,int year,int month,int day,int score)
+void insert (struct StudentDA *stdPtrDA,char *name_f,int ID,int year,int month,int day,int score)
 {
-	stdPtr->name=name_f;
-	stdPtr->std_ID=ID;
-	stdPtr->year=year;
-	stdPtr->month=month;
-	stdPtr->day=day;
-	stdPtr->score_std=score;
-	stdPtr->flag=1;
+	stdPtrDA->stdData.name=name_f;
+	stdPtrDA->stdData.std_ID=ID;
+	stdPtrDA->stdData.year=year;
+	stdPtrDA->stdData.month=month;
+	stdPtrDA->stdData.day=day;
+	stdPtrDA->stdData.score_std=score;
+	stdPtrDA->flag=1;
 }
 
-void printArray(struct Student *stdPtr)
+void printArray(struct StudentDA *stdPtrDA)
 {
 	int i=0;
 
 	for (i=0;i<N;i++)
 	{
-		printf("[%d] std data:\n",i);
-		printf("Name: %s\n",(stdPtr+i)->name);
-		printf("ID: %d\n",(stdPtr+i)->std_ID);
-		printf("Birthdate: %d,%d,%d\n",(stdPtr+i)->day,(stdPtr+i)->month,(stdPtr+i)->year);
-		printf("Score: %d\n\n",(stdPtr+i)->score_std);
+		fflush(stdout);
+
+		printf("[%d] std data:\t",i);
+		printf("Name: %s\t",(stdPtrDA+i)->stdData.name);
+		printf("ID: %d\t",(stdPtrDA+i)->stdData.std_ID);
+		printf("Birthdate: %d,%d,%d\t",(stdPtrDA+i)->stdData.day,(stdPtrDA+i)->stdData.month,(stdPtrDA+i)->stdData.year);
+		printf("Score: %d\n",(stdPtrDA+i)->stdData.score_std);
+
 	}
+	puts("=========================================================");
 }
 
 /* ----------------------------------------------------------------------------------------------- */
@@ -243,25 +269,25 @@ void printArray(struct Student *stdPtr)
 /* ----------------------------------------------------------------------------------------------- */
 
 void InsertFirst_LL (char *InName, int InID, int InDay, int InMonth, int InYear, int InScore){
-	struct Student *NewStudent = (struct Student *) malloc (sizeof(struct Student));
+	struct StudentLL *NewStudentLL = (struct StudentLL *) malloc (sizeof(struct StudentLL));
 	//Assigning the wanted data to the new Student
-	NewStudent->name = InName;
-	NewStudent->std_ID = InID;
-	NewStudent->day = InDay;
-	NewStudent->month = InMonth;
-	NewStudent->year = InYear;
-	NewStudent->score_std = InScore;
+	NewStudentLL->stdData.name = InName;
+	NewStudentLL->stdData.std_ID = InID;
+	NewStudentLL->stdData.day = InDay;
+	NewStudentLL->stdData.month = InMonth;
+	NewStudentLL->stdData.year = InYear;
+	NewStudentLL->stdData.score_std = InScore;
 
 	//Changing Head Pointer
 
 	if (length == 0){//If the list is empty
-		Head = Tail = NewStudent;
-		NewStudent->next = NULL;
+		Head = Tail = NewStudentLL;
+		NewStudentLL->next = NULL;
 	}
 
 	else{//If we already have a Student at first
-		NewStudent->next = Head;
-		Head = NewStudent;
+		NewStudentLL->next = Head;
+		Head = NewStudentLL;
 	}
 
 	length ++;
@@ -269,25 +295,25 @@ void InsertFirst_LL (char *InName, int InID, int InDay, int InMonth, int InYear,
 }
 
 void InsertEnd_LL (char *InName, int InID, int InDay, int InMonth, int InYear, int InScore){
-	struct Student *NewStudent = (struct Student *) malloc (sizeof(struct Student));
+	struct StudentLL *NewStudentLL = (struct StudentLL *) malloc (sizeof(struct StudentLL));
 
 	//Assigning the wanted data to the new Student
-	NewStudent->name = InName;
-	NewStudent->std_ID = InID;
-	NewStudent->day = InDay;
-	NewStudent->month = InMonth;
-	NewStudent->year = InYear;
-	NewStudent->score_std = InScore;
+	NewStudentLL->stdData.name = InName;
+	NewStudentLL->stdData.std_ID = InID;
+	NewStudentLL->stdData.day = InDay;
+	NewStudentLL->stdData.month = InMonth;
+	NewStudentLL->stdData.year = InYear;
+	NewStudentLL->stdData.score_std = InScore;
 
 	//Changing Tail and Head Pointers if needed
 	if (length == 0){//To handle beginning the insertion at the end (list is empty)
-		Head = Tail = NewStudent;
-		NewStudent->next = NULL;
+		Head = Tail = NewStudentLL;
+		NewStudentLL->next = NULL;
 	}
 	else{
-		NewStudent->next = NULL;
-		Tail->next = NewStudent;
-		Tail=NewStudent;
+		NewStudentLL->next = NULL;
+		Tail->next = NewStudentLL;
+		Tail=NewStudentLL;
 	}
 
 	length ++;
@@ -295,7 +321,7 @@ void InsertEnd_LL (char *InName, int InID, int InDay, int InMonth, int InYear, i
 }
 
 void InsertAtPos_LL (int pos,char *InName, int InID, int InDay, int InMonth, int InYear, int InScore){
-	struct Student *NewStudent = (struct Student *) malloc (sizeof(struct Student));
+	struct StudentLL *NewStudentLL = (struct StudentLL *) malloc (sizeof(struct StudentLL));
 
 	if (pos<0||pos>length)
 		printf("Invalid Position");
@@ -306,20 +332,20 @@ void InsertAtPos_LL (int pos,char *InName, int InID, int InDay, int InMonth, int
 		InsertEnd_LL(InName, InID, InDay, InMonth, InYear, InScore);
 
 	else{
-		struct Student *current = Head;
+		struct StudentLL *current = Head;
 		//Assigning the wanted data to the new Student
-		NewStudent->name = InName;
-		NewStudent->std_ID = InID;
-		NewStudent->day = InDay;
-		NewStudent->month = InMonth;
-		NewStudent->year = InYear;
-		NewStudent->score_std = InScore;
+		NewStudentLL->stdData.name = InName;
+		NewStudentLL->stdData.std_ID = InID;
+		NewStudentLL->stdData.day = InDay;
+		NewStudentLL->stdData.month = InMonth;
+		NewStudentLL->stdData.year = InYear;
+		NewStudentLL->stdData.score_std = InScore;
 		//Searching for the wanted position
 		for (int i=1;i<pos;i++)
 			current = current->next;
 
-		NewStudent->next = current->next;
-		current->next = NewStudent;
+		NewStudentLL->next = current->next;
+		current->next = NewStudentLL;
 	}
 
 	length ++;
@@ -332,11 +358,11 @@ void PrintList (void) {
 	}
 	else{
 
-		struct Student *current = Head;
+		struct StudentLL *current = Head;
 		printf("\n----------------PRINTING-------------------\n");
 
 		for (int i = 0;i<=length;i++){
-			printf("Student %d:\nName: %s\nID: %d\nDate of birth: %d/%d/%d\nLast year score: %d\n",i+1,current->name,current->std_ID,current->day,current->month,current->year,current->score_std);
+			printf("Student %d:\nName: %s\nID: %d\nDate of birth: %d/%d/%d\nLast year score: %d\n",i+1,current->stdData.name,current->stdData.std_ID,current->stdData.day,current->stdData.month,current->stdData.year,current->stdData.score_std);
 			printf("-------------------------------------------\n");
 			current = current->next;
 		}
